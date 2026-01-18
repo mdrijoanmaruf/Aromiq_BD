@@ -922,21 +922,19 @@
     </div>
 <!-- Cart Modal -->
 <div id="cartModal">
-    <div class="cart-modal-content">
-        <div class="cart-modal-header">
-            <h4 style="margin: 0;">Shopping Cart</h4>
-            <button onclick="cart.hideCart()" style="background: none; border: none; font-size: 30px; cursor: pointer; color: #666;">&times;</button>
+    <div class="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Cart <span class="item-count" id="cartItemCount">0</span></h3>
+            <button class="close-btn" onclick="cart.hideCart()">×</button>
         </div>
-        <div class="cart-modal-body" id="cartItems">
-            <p class="text-center">Your cart is empty</p>
-        </div>
-        <div class="cart-modal-footer">
-            <div class="d-flex justify-content-between mb-3">
-                <strong>Total:</strong>
-                <strong><span id="cartTotal">0</span> Tk</strong>
+        <div class="cart-body" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>Total</span>
+                <span class="total-amount">৳<span id="cartTotal">0</span></span>
             </div>
-            <button onclick="window.location.href='checkout.html'" class="btn btn-success w-100 mb-2">Proceed to Checkout</button>
-            <button onclick="cart.hideCart()" class="btn btn-outline-secondary w-100">Continue Shopping</button>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+            <a href="#" class="continue-link" onclick="cart.hideCart(); return false;">Continue Shopping</a>
         </div>
     </div>
 </div>

@@ -6,362 +6,303 @@
     <title>Checkout - Aromiq BD</title>
     <link rel="shortcut icon" href="assets/images/aromiq20bd20logo20-20copy-354x354.png" type="image/x-icon">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/theme/css/style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Inter Tight', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
-        .checkout-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .checkout-container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Header */
         .checkout-header {
-            background: white;
-            padding: 20px 40px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            text-align: center;
+            padding: 15px 0 20px;
         }
-        .checkout-header h2 {
-            margin: 0;
-            color: #333;
-            font-weight: 700;
+        .checkout-header img { height: 50px; }
+        .checkout-header h1 {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 8px;
         }
-        .checkout-container {
+        
+        /* Main Grid */
+        .checkout-main {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 25px;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 15px;
             align-items: start;
         }
-        .order-summary-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 20px;
+        @media (max-width: 768px) {
+            .checkout-main { grid-template-columns: 1fr; }
         }
-        .order-summary-section h4 {
-            color: #333;
+        
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .card-head {
+            font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            font-size: 22px;
-            padding-bottom: 15px;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .order-items-list {
-            max-height: 300px;
+        .card-head::before { font-size: 16px; }
+        .card-head.user::before { content: '👤'; }
+        .card-head.order::before { content: '🛒'; }
+        
+        /* Form */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+        
+        .field { margin-bottom: 12px; }
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .field label .req { color: #e74c3c; }
+        .field label .opt { color: #999; font-weight: 400; }
+        
+        .input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .input:focus {
+            border-color: #6c5ce7;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.1);
+        }
+        .input::placeholder { color: #bbb; }
+        textarea.input { resize: none; min-height: 60px; }
+        
+        /* Shipping */
+        .shipping-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .ship-opt {
+            position: relative;
+            padding: 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            background: #fafafa;
+        }
+        .ship-opt:hover { border-color: #6c5ce7; }
+        .ship-opt.active {
+            border-color: #6c5ce7;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: #fff;
+        }
+        .ship-opt input { position: absolute; opacity: 0; pointer-events: none; }
+        .ship-opt .loc { font-weight: 700; font-size: 0.8rem; }
+        .ship-opt .cost { font-size: 0.7rem; margin-top: 3px; opacity: 0.8; }
+        
+        /* Order Summary */
+        .items-list {
+            max-height: 150px;
             overflow-y: auto;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
-        .order-items-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        .order-items-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .order-items-list::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
+        .items-list::-webkit-scrollbar { width: 3px; }
+        .items-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+        
         .order-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: transform 0.2s;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.8rem;
         }
-        .order-item:hover {
-            transform: translateX(5px);
-            background: #f0f0f0;
-        }
-        .order-item-info h6 {
-            margin: 0 0 5px 0;
-            color: #333;
-            font-weight: 600;
-        }
-        .order-item-info small {
-            color: #666;
-            font-size: 13px;
-        }
-        .order-item-price {
-            font-weight: 700;
-            color: #667eea;
-            font-size: 16px;
-        }
-        .summary-totals {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-        }
-        .summary-row {
+        .order-item:last-child { border: none; }
+        .order-item .name { font-weight: 600; color: #333; }
+        .order-item .meta { font-size: 0.7rem; color: #888; }
+        .order-item .price { font-weight: 700; color: #6c5ce7; }
+        
+        /* Summary Rows */
+        .sum-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            font-size: 15px;
+            padding: 5px 0;
+            font-size: 0.8rem;
+            color: #666;
         }
-        .summary-row.total {
-            border-top: 2px solid rgba(255,255,255,0.3);
-            padding-top: 15px;
-            margin-top: 10px;
-            font-size: 20px;
+        .sum-row.total {
+            border-top: 2px solid #1a1a2e;
+            margin-top: 8px;
+            padding-top: 10px;
+            font-size: 1rem;
             font-weight: 700;
+            color: #1a1a2e;
         }
-        .form-section {
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        .form-section h4 {
-            color: #333;
-            font-weight: 700;
-            margin-bottom: 25px;
-            font-size: 22px;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-            display: block;
-            font-size: 14px;
-        }
-        .required {
-            color: #dc3545;
-        }
-        .form-control {
+        .sum-row.total span:last-child { color: #27ae60; }
+        
+        /* Buttons */
+        .btn-order {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s;
-            font-family: 'Inter Tight', sans-serif;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .shipping-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .shipping-option {
-            padding: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            background: #f8f9fa;
-        }
-        .shipping-option:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-        }
-        .shipping-option.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        }
-        .shipping-option .form-check {
-            display: none;
-        }
-        .shipping-option strong {
-            display: block;
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        .shipping-option .price {
-            color: #667eea;
-            font-weight: 600;
-            font-size: 18px;
-        }
-        .btn-checkout {
-            width: 100%;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: 700;
+            padding: 12px;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
             border: none;
             border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
         }
-        .btn-success {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .btn-order:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+        
+        .btn-back {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            color: #666;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
         }
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-        .btn-outline-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-        }
-        .btn-outline-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-        @media (max-width: 992px) {
-            .checkout-container {
-                grid-template-columns: 1fr;
-            }
-            .order-summary-section {
-                position: relative;
-                top: 0;
-            }
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            .shipping-options {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 576px) {
-            body {
-                padding: 10px;
-            }
-            .checkout-header {
-                padding: 15px 20px;
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            .checkout-header img {
-                height: 60px !important;
-            }
-            .form-section, .order-summary-section {
-                padding: 20px;
-            }
+        .btn-back:hover { background: #f5f5f5; border-color: #bbb; }
+        
+        .wa-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            background: #e8f5e9;
+            color: #25d366;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="checkout-container">
-        <div class="text-center mb-4">
-            <img src="assets/images/aromiq20bd20logo20-20copy-354x354.png" alt="Aromiq BD" style="height: 80px;">
-            <h2 class="mt-3">Checkout</h2>
+        <div class="checkout-header">
+            <img src="assets/images/aromiq20bd20logo20-20copy-354x354.png" alt="Aromiq BD">
+            <h1>Complete Your Order</h1>
         </div>
 
-        <!-- Order Summary -->
-        <div class="order-summary">
-            <h4 class="mb-3">Order Summary</h4>
-            <div id="orderItems"></div>
-            <div class="order-item mt-3" style="font-weight: bold;">
-                <span>Subtotal:</span>
-                <span id="subtotal">0 Tk</span>
-            </div>
-        </div>
-
-        <!-- Checkout Form -->
         <form id="checkoutForm">
-            <div class="mb-3">
-                <label for="customerName" class="form-label">Name <span class="required">*</span></label>
-                <input type="text" class="form-control" id="customerName" required>
-            </div>
+            <div class="checkout-main">
+                <!-- Customer Info -->
+                <div class="card">
+                    <h3 class="card-head user">Your Information</h3>
+                    
+                    <div class="form-row">
+                        <div class="field">
+                            <label>Full Name <span class="req">*</span></label>
+                            <input type="text" class="input" id="customerName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="field">
+                            <label>Phone Number <span class="req">*</span></label>
+                            <input type="tel" class="input" id="customerPhone" placeholder="01XXXXXXXXX" required>
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label for="customerPhone" class="form-label">Phone Number <span class="required">*</span></label>
-                <input type="tel" class="form-control" id="customerPhone" placeholder="01XXXXXXXXX" required>
-            </div>
+                    <div class="field">
+                        <label>Email <span class="opt">(optional)</span></label>
+                        <input type="email" class="input" id="customerEmail" placeholder="your.email@example.com">
+                    </div>
 
-            <div class="mb-3">
-                <label for="customerEmail" class="form-label">Email <small>(Optional)</small></label>
-                <input type="email" class="form-control" id="customerEmail">
-            </div>
+                    <div class="field">
+                        <label>Delivery Address <span class="req">*</span></label>
+                        <textarea class="input" id="customerAddress" placeholder="House no, Road, Area, City/District" required></textarea>
+                    </div>
 
-            <div class="mb-3">
-                <label for="customerAddress" class="form-label">Delivery Address <span class="required">*</span></label>
-                <textarea class="form-control" id="customerAddress" rows="3" required></textarea>
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label">Delivery Location <span class="required">*</span></label>
-                <div class="shipping-option" data-location="inside" data-cost="70">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="location" id="insideDhaka" value="inside" required>
-                        <label class="form-check-label" for="insideDhaka">
-                            <strong>Inside Dhaka</strong> - Shipping: 70 Tk
-                        </label>
+                    <div class="field">
+                        <label>Delivery Zone <span class="req">*</span></label>
+                        <div class="shipping-row">
+                            <label class="ship-opt" data-cost="70">
+                                <input type="radio" name="location" value="inside" required>
+                                <div class="loc">📍 Inside Dhaka</div>
+                                <div class="cost">৳70 Shipping</div>
+                            </label>
+                            <label class="ship-opt" data-cost="120">
+                                <input type="radio" name="location" value="outside">
+                                <div class="loc">🚚 Outside Dhaka</div>
+                                <div class="cost">৳120 Shipping</div>
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="shipping-option" data-location="outside" data-cost="120">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="location" id="outsideDhaka" value="outside" required>
-                        <label class="form-check-label" for="outsideDhaka">
-                            <strong>Outside Dhaka</strong> - Shipping: 120 Tk
-                        </label>
+
+                <!-- Order Summary -->
+                <div class="card">
+                    <h3 class="card-head order">Order Summary</h3>
+                    
+                    <div class="items-list" id="orderItems"></div>
+
+                    <div class="sum-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal">৳0</span>
+                    </div>
+                    <div class="sum-row">
+                        <span>Shipping</span>
+                        <span id="shippingCost">৳0</span>
+                    </div>
+                    <div class="sum-row total">
+                        <span>Total</span>
+                        <span id="totalCost">৳0</span>
+                    </div>
+
+                    <button type="submit" class="btn-order">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        Order via WhatsApp
+                    </button>
+                    <button type="button" class="btn-back" onclick="window.location.href='index.html'">← Continue Shopping</button>
+                    
+                    <div style="text-align:center">
+                        <span class="wa-badge">🔒 Secure WhatsApp Order</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Total Section -->
-            <div class="total-section">
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Subtotal:</span>
-                    <span id="subtotalFinal">0 Tk</span>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Shipping:</span>
-                    <span id="shippingCost">0 Tk</span>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between" style="font-size: 20px; font-weight: bold;">
-                    <span>Total:</span>
-                    <span id="totalCost">0 Tk</span>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-success btn-checkout mt-4">Place Order</button>
-            <a href="index.html" class="btn btn-outline-secondary btn-checkout mt-2">Continue Shopping</a>
         </form>
     </div>
 
     <script src="assets/js/cart.js"></script>
     <script>
-        // Load order items
         function loadOrderSummary() {
-            const orderItemsContainer = document.getElementById('orderItems');
+            const container = document.getElementById('orderItems');
             const subtotal = cart.getTotal();
             
             if (cart.cart.length === 0) {
@@ -369,47 +310,38 @@
                 return;
             }
 
-            orderItemsContainer.innerHTML = cart.cart.map(item => `
+            container.innerHTML = cart.cart.map(item => `
                 <div class="order-item">
                     <div>
-                        <strong>${item.name}</strong> (${item.size})
-                        <br><small>Quantity: ${item.quantity}</small>
+                        <div class="name">${item.name}</div>
+                        <div class="meta">${item.size} × ${item.quantity}</div>
                     </div>
-                    <span>${item.price * item.quantity} Tk</span>
+                    <div class="price">৳${item.price * item.quantity}</div>
                 </div>
             `).join('');
 
-            document.getElementById('subtotal').textContent = subtotal + ' Tk';
-            document.getElementById('subtotalFinal').textContent = subtotal + ' Tk';
+            document.getElementById('subtotal').textContent = '৳' + subtotal;
             updateTotal();
         }
 
-        // Update total when shipping option changes
         function updateTotal() {
             const subtotal = cart.getTotal();
-            const selectedLocation = document.querySelector('input[name="location"]:checked');
-            const shippingCost = selectedLocation ? parseInt(selectedLocation.parentElement.parentElement.dataset.cost) : 0;
+            const selected = document.querySelector('input[name="location"]:checked');
+            const shipping = selected ? parseInt(selected.parentElement.dataset.cost) : 0;
             
-            document.getElementById('shippingCost').textContent = shippingCost + ' Tk';
-            document.getElementById('totalCost').textContent = (subtotal + shippingCost) + ' Tk';
+            document.getElementById('shippingCost').textContent = '৳' + shipping;
+            document.getElementById('totalCost').textContent = '৳' + (subtotal + shipping);
         }
 
-        // Handle shipping option selection
-        document.querySelectorAll('.shipping-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const radio = this.querySelector('input[type="radio"]');
-                radio.checked = true;
-                
-                document.querySelectorAll('.shipping-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-                
+        document.querySelectorAll('.ship-opt').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.ship-opt').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input').checked = true;
                 updateTotal();
             });
         });
 
-        // Handle form submission
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -419,60 +351,27 @@
             const address = document.getElementById('customerAddress').value;
             const location = document.querySelector('input[name="location"]:checked').value;
             const subtotal = cart.getTotal();
-            const shipping = parseInt(document.querySelector('input[name="location"]:checked').parentElement.parentElement.dataset.cost);
+            const shipping = parseInt(document.querySelector('input[name="location"]:checked').parentElement.dataset.cost);
             const total = subtotal + shipping;
 
-            // Prepare order data
-            const orderData = {
-                customer: { name, phone, email, address, location },
-                items: cart.cart,
-                subtotal,
-                shipping,
-                total,
-                date: new Date().toISOString()
-            };
-
-            // Save order to localStorage
-            const orders = JSON.parse(localStorage.getItem('aromiqOrders') || '[]');
-            orders.push(orderData);
-            localStorage.setItem('aromiqOrders', JSON.stringify(orders));
-
-            // Prepare WhatsApp message
-            let message = `*New Order - Aromiq BD*\n\n`;
-            message += `*Customer Details:*\n`;
-            message += `Name: ${name}\n`;
-            message += `Phone: ${phone}\n`;
-            if (email) message += `Email: ${email}\n`;
-            message += `Address: ${address}\n`;
-            message += `Location: ${location === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}\n\n`;
-            message += `*Order Items:*\n`;
+            let msg = `*🛒 New Order - Aromiq BD*\n\n`;
+            msg += `*👤 Customer:*\n`;
+            msg += `Name: ${name}\nPhone: ${phone}\n`;
+            if (email) msg += `Email: ${email}\n`;
+            msg += `Address: ${address}\n`;
+            msg += `Zone: ${location === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}\n\n`;
+            msg += `*📦 Items:*\n`;
             cart.cart.forEach(item => {
-                message += `• ${item.name} (${item.size}) - Qty: ${item.quantity} - ${item.price * item.quantity} Tk\n`;
+                msg += `• ${item.name} (${item.size}) ×${item.quantity} = ৳${item.price * item.quantity}\n`;
             });
-            message += `\n*Subtotal:* ${subtotal} Tk\n`;
-            message += `*Shipping:* ${shipping} Tk\n`;
-            message += `*Total:* ${total} Tk`;
+            msg += `\n*💰 Payment:*\n`;
+            msg += `Subtotal: ৳${subtotal}\nShipping: ৳${shipping}\n*Total: ৳${total}*`;
 
-            // Encode message for WhatsApp
-            const whatsappNumber = '01641843473';
-            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-            // Clear cart
             cart.clearCart();
-
-            // Show success message
-            alert('Order placed successfully! You will be redirected to WhatsApp to confirm your order.');
-
-            // Redirect to WhatsApp
-            window.open(whatsappURL, '_blank');
-
-            // Redirect to home page after a delay
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
+            window.open(`https://wa.me/8801641843473?text=${encodeURIComponent(msg)}`, '_blank');
+            setTimeout(() => window.location.href = 'index.html', 1500);
         });
 
-        // Initialize
         loadOrderSummary();
     </script>
 </body>
